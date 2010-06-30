@@ -45,33 +45,18 @@ void funct($<MyObject> o){
     o->printName();
 }
 
-class OO{
-    public:
-        OO(){
-            cout << "construct" << endl;
-        }
-        
-        OO(const OO& c){
-            cout << "copy" << endl;
-        }
-        
-        ~OO(){
-            cout << "destruct" << endl;
-        }
-};
 
 int main(int argc, char** argv)
 {
     vector<$<MyObject> > v;
-    #define C 100
+    #define C 10
     for (int i =0; i < C; i++){
         $<MyObject> r = new MyObject("Azmy");
         v.push_back(r);
     }
 	
-    /*
     for (int i = 0; i< C; i++)
-        v[i]->printName();
-    */
+        funct(v[i]);
+    
 	return 0;
 }

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 #include <iostream>
@@ -83,7 +83,8 @@ T* $<T>::operator =(const $<T>& o){
 
 template <class T>
 void $<T>::inc() {
-    rcounter* rcount = (rcounter*) (this->ptr - sizeof(rcounter));
+    long paddress = (long) this->ptr;
+    rcounter* rcount = (rcounter*) (paddress - sizeof(rcounter));
     if (pthread_mutex_lock(&rcount->lock))
         throw GC_LOCK_AQUIRE_ERR;
     
@@ -99,7 +100,8 @@ void $<T>::inc() {
 
 template <class T>
 void $<T>::dec() {
-    rcounter* rcount = (rcounter*) (this->ptr - sizeof(rcounter));
+    long paddress = (long) this->ptr;
+    rcounter* rcount = (rcounter*) (paddress - sizeof(rcounter));
     if (pthread_mutex_lock(&rcount->lock))
         throw GC_LOCK_AQUIRE_ERR;
     

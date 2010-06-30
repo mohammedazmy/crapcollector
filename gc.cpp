@@ -14,7 +14,8 @@ void* Object::operator new(size_t size){
 }
 
 void Object::operator delete(void* ptr) {
-    rcounter* obj = (rcounter*) ptr - sizeof(rcounter);
+    long paddress = (long) ptr;
+    rcounter* obj = (rcounter*) (paddress - sizeof(rcounter));
     pthread_mutex_destroy(&obj->lock);
     free(obj);
 }
