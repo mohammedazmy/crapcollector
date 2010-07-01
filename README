@@ -1,0 +1,84 @@
+== Crap Collector:
+Another garpage collector for C++. uses a reference counter algorithm 
+and supposly a thread safe one.
+    
+== Why another implementation there are already other and probably better ones? 
+- For fun.
+- All articles that talks about overriding the new operator always says
+that this feature can be used to implement a garbage collector but they
+never said how, so I decided to find a "how" and implement it
+
+== Cons of this implementation:
+- Like all reference counting algorithms, it has a problem with circular
+referencing. For example if object a has reference to object b and 
+object b has reference to object a, neither of them will be freed because
+the count reference of either will reach 0 even if they both are not used
+at all.
+- Works only with custom types that inherits Object class, so you can't 
+have an int object that is managed by the GC or (CC for crap collector)
+
+== Pros:
+- It's created by me ;)
+- It doesn't consume much memeory, because not like a lot of memory
+since it doesn't keep track of allocated memory, the counter is hidden
+inside the object itself (in a hidden memory area which is not accessable
+even by the Object class).
+- For the same reason, it should be fast because it doesn't have to iterate
+or scan the tracked memory
+
+== How to use:
+
+#include <gc.h>
+using namespace gc;
+
+class MyClass : public Object {
+    /*
+    your code is here
+    
+    */
+    virtual void mymethod();
+};
+
+class MyChildClass : public MyClass {
+    /*
+    you code is here
+    */
+    virtual void mymethod();
+};
+
+
+int main(){
+    $<MyClass> x = new MyClass();
+    $<MyClass> y = new MyChildClass();
+    
+    x->mymethod();
+    y->mymethod();
+    
+    //you will notice that both objects will be distructed before the function exit
+}
+
+
+/*another example*/
+
+
+class AnotherClass: public Object{
+    private:
+        $<MyClass> y;
+        AnotherClass($<MyClass> x){
+            this->y = x;
+        };
+};
+
+void func($<AnotherClass> a){
+    //do stuff here.
+}
+
+int main() {
+    $<MyClass> a = new MyClass();
+    $<AnotherClass> c = new AnotherClass(a);
+    func(c);
+    
+    
+    return 0;
+    //you will notice that both objects will be distructed before the function exit
+}
