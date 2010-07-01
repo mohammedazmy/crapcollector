@@ -23,6 +23,7 @@
 #include <vector>
 
 using namespace std;
+using namespace gc;
 
 class MyObject : public Object{
     protected:
@@ -30,10 +31,10 @@ class MyObject : public Object{
     public:
         MyObject(const char* name){
             this->name = name;
-            cout << "Construct object: " << this << endl;
-        }
+            cout << "Construct object: " << this->name << endl;
+        };
         virtual ~MyObject(){
-            cout << "Destruct object" << endl;
+            cout << "Destruct object: " << this->name << endl;
         };
         virtual void printName(){
             cout << "I am MyObject of " <<  this->name << ": " << this << endl;
@@ -41,30 +42,31 @@ class MyObject : public Object{
 };
 
 class Child : public MyObject{
+    private:
+        $<MyObject> link;
+        
     public:
         Child(const char* name) : MyObject(name){
+            link = new MyObject("This is the parent link");
         };
         
         virtual void printName() {
             cout << "I am child, and my name is " << this->name << endl;
+            cout << "    Parent: " ;
+            link->printName();
         };
 };
+
+
 void funct($<MyObject> o){
-    o->printName();
+    (*o).printName();
 }
 
 
 int main(int argc, char** argv)
 {
-    /*
-    $<MyObject> ref = new MyObject("Azmy");
-    $<MyObject> ref2;
-    ref2 = ref;
-    
-    funct(ref2);
-    */
     vector<$<MyObject> > v;
-    #define C 10000
+    #define C 10
     for (int i =0; i < C; i++){
         $<MyObject> r = new Child("Azmy");
         v.push_back(r);
