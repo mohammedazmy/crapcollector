@@ -10,4 +10,6 @@ test: main.cpp libgc.so
 libgc.so: gc.o
 	$(GCC) -shared -Wall,-soname,libgc.so \
         	-o libgc.so gc.o
-     
+install: libgc.so
+	cp libgc.so /usr/local/lib/
+	cp gc.h /usr/include/

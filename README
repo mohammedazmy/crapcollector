@@ -19,7 +19,7 @@ have an int object that is managed by the GC or (CC for crap collector)
 
 == Pros:
 - It's created by me ;)
-- It doesn't consume much memeory, because not like a lot of memory
+- It doesn't consume much memeory, because not like a lot of other GCs available,
 since it doesn't keep track of allocated memory, the counter is hidden
 inside the object itself (in a hidden memory area which is not accessable
 even by the Object class).
