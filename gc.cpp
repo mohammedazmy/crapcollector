@@ -4,6 +4,8 @@
 #include <pthread.h>
 #include <typeinfo>
 
+namespace gc {
+
 void* Object::operator new(size_t size){
     rcounter* obj = (rcounter*) malloc(size + sizeof(rcounter));
     obj->count = 0x0;
@@ -30,4 +32,6 @@ bool Object::operator ==(const Object& o) const{
 string Object::toString() const {
     string str = typeid(this).name();
     return str;
+}
+
 }

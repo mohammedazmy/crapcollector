@@ -14,6 +14,8 @@ using namespace std;
 #include <string>
 using namespace std;
 
+namespace gc {
+    
 static const int GC_LOCK_INIT_ERR = 1000;
 static const int GC_LOCK_AQUIRE_ERR = 1001;
 static const int GC_LOCK_RELEASE_ERR = 1002;
@@ -167,6 +169,6 @@ void $<T>::dec() {
     }
 }
 
-
+}
 
 #endif
