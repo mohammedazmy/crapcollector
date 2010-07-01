@@ -58,11 +58,15 @@ class $ {
 
 template <class T>
 $<T>::$(T* ptr){
-    if (!dynamic_cast<Object*>(ptr)){
-        throw GC_TYPE_ERR;
+    if (ptr){
+        if (!dynamic_cast<Object*>(ptr)) {
+            throw GC_TYPE_ERR;
+        }
+        this->ptr = ptr;
+        this->inc();
+    } else {
+        this->ptr = 0x0;
     }
-    this->ptr = ptr;
-    this->inc();
 }
 
 template <class T>
