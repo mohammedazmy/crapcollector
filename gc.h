@@ -46,6 +46,7 @@ class $ {
         ~$();
         T* operator ->();
         T* operator =(const $<T>& o);
+        T& operator *();
         bool operator ==(const $<T>& o);
         bool operator ==(const T* o);
         operator T*();
@@ -112,6 +113,11 @@ T* $<T>::operator =(const $<T>& o){
     if (this->ptr != 0x0){
         this->inc();
     }
+}
+
+template <class T>
+T& $<T>::operator *(){
+    return *this->ptr;
 }
 
 template <class T>
