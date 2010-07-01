@@ -19,7 +19,7 @@
 
 
 #include <iostream>
-#include "gc.h"
+#include "gc.hpp"
 #include <vector>
 
 using namespace std;

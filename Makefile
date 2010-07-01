@@ -1,7 +1,7 @@
 GCC=g++
 all: test
 
-gc.o: gc.cpp gc.h
+gc.o: gc.cpp gc.hpp
 	$(GCC) -fPIC -g -c -Wall gc.cpp
     
 test: main.cpp libgc.so
@@ -12,4 +12,4 @@ libgc.so: gc.o
         	-o libgc.so gc.o
 install: libgc.so
 	cp libgc.so /usr/local/lib/
-	cp gc.h /usr/include/
+	cp gc.hpp /usr/include/

@@ -1,5 +1,5 @@
 
-#include "gc.h"
+#include "gc.hpp"
 #include <stdlib.h>
 #include <pthread.h>
 #include <typeinfo>
