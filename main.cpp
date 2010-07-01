@@ -25,22 +25,30 @@
 using namespace std;
 
 class MyObject : public Object{
-    private:
+    protected:
         string name;
     public:
         MyObject(const char* name){
             this->name = name;
             cout << "Construct object: " << this << endl;
         }
-        ~MyObject(){
+        virtual ~MyObject(){
             cout << "Destruct object" << endl;
         };
-        void printName(){
+        virtual void printName(){
             cout << "I am MyObject of " <<  this->name << ": " << this << endl;
         }
 };
 
-
+class Child : public MyObject{
+    public:
+        Child(const char* name) : MyObject(name){
+        };
+        
+        virtual void printName() {
+            cout << "I am child, and my name is " << this->name << endl;
+        };
+};
 void funct($<MyObject> o){
     o->printName();
 }
@@ -48,10 +56,17 @@ void funct($<MyObject> o){
 
 int main(int argc, char** argv)
 {
+    /*
+    $<MyObject> ref = new MyObject("Azmy");
+    $<MyObject> ref2;
+    ref2 = ref;
+    
+    funct(ref2);
+    */
     vector<$<MyObject> > v;
-    #define C 10
+    #define C 10000
     for (int i =0; i < C; i++){
-        $<MyObject> r = new MyObject("Azmy");
+        $<MyObject> r = new Child("Azmy");
         v.push_back(r);
     }
 	

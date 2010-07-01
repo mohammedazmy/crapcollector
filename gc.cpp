@@ -9,13 +9,11 @@ void* Object::operator new(size_t size){
     if (pthread_mutex_init(&obj->lock, NULL)) {
         throw GC_LOCK_INIT_ERR;
     }
-    long paddress = (long) obj;
-    return (void*) (paddress + sizeof(rcounter));
+    return obj + 1;
 }
 
 void Object::operator delete(void* ptr) {
-    long paddress = (long) ptr;
-    rcounter* obj = (rcounter*) (paddress - sizeof(rcounter));
+    rcounter* obj = ((rcounter*) ptr - 1);
     pthread_mutex_destroy(&obj->lock);
     free(obj);
 }

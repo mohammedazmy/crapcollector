@@ -83,8 +83,7 @@ T* $<T>::operator =(const $<T>& o){
 
 template <class T>
 void $<T>::inc() {
-    long paddress = (long) this->ptr;
-    rcounter* rcount = (rcounter*) (paddress - sizeof(rcounter));
+    rcounter* rcount = ((rcounter*) this->ptr) - 1;
     if (pthread_mutex_lock(&rcount->lock))
         throw GC_LOCK_AQUIRE_ERR;
     
@@ -100,8 +99,7 @@ void $<T>::inc() {
 
 template <class T>
 void $<T>::dec() {
-    long paddress = (long) this->ptr;
-    rcounter* rcount = (rcounter*) (paddress - sizeof(rcounter));
+    rcounter* rcount = ((rcounter*) this->ptr) - 1;
     if (pthread_mutex_lock(&rcount->lock))
         throw GC_LOCK_AQUIRE_ERR;
     
