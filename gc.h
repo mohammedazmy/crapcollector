@@ -11,13 +11,28 @@
 using namespace std;
 #endif
 
+#include <string>
+using namespace std;
+
 static const int GC_LOCK_INIT_ERR = 1000;
 static const int GC_LOCK_AQUIRE_ERR = 1001;
 static const int GC_LOCK_RELEASE_ERR = 1002;
+static const int GC_TYPE_ERR = 1003;
+static const int GC_NULL_POINTER_ERR = 1004;
 
 struct rcounter {
     long count;
     pthread_mutex_t lock;
+};
+
+class Object {
+    public:
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
+        
+        virtual unsigned long hash() const;
+        virtual bool operator ==(const Object& o) const;
+        virtual string toString() const;
 };
 
 template <class T>
@@ -29,6 +44,9 @@ class $ {
         ~$();
         T* operator ->();
         T* operator =(const $<T>& o);
+        bool operator ==(const $<T>& o);
+        bool operator ==(const T* o);
+        operator T*();
     private:
         T* ptr;
         void inc();
@@ -38,6 +56,9 @@ class $ {
 
 template <class T>
 $<T>::$(T* ptr){
+    if (!dynamic_cast<Object*>(ptr)){
+        throw GC_TYPE_ERR;
+    }
     this->ptr = ptr;
     this->inc();
 }
@@ -65,9 +86,16 @@ $<T>::~$(){
 
 template <class T>
 T* $<T>::operator ->(){
+    if (!this->ptr) {
+        throw GC_NULL_POINTER_ERR;
+    }
     return this->ptr;
 }
 
+template <class T>
+$<T>::operator T*(){
+    return this->ptr;
+}
 
 template <class T>
 T* $<T>::operator =(const $<T>& o){
@@ -80,7 +108,24 @@ T* $<T>::operator =(const $<T>& o){
     }
 }
 
+template <class T>
+bool $<T>::operator ==(const $<T>& o){
+    if (this->ptr){
+        return this->ptr->operator==(*o.ptr);
+    } else {
+        return this->ptr == o.ptr;
+    }
+}
 
+template <class T>
+bool $<T>::operator ==(const T* o){
+    if (this->ptr) {
+        return this->ptr->operator==(*o);
+    } else {
+        return this->ptr == o;
+    }
+}
+        
 template <class T>
 void $<T>::inc() {
     rcounter* rcount = ((rcounter*) this->ptr) - 1;
@@ -122,10 +167,6 @@ void $<T>::dec() {
     }
 }
 
-class Object {
-    public:
-        static void* operator new(size_t size);
-        static void operator delete(void* ptr);
-};
+
 
 #endif

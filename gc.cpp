@@ -2,6 +2,7 @@
 #include "gc.h"
 #include <stdlib.h>
 #include <pthread.h>
+#include <typeinfo>
 
 void* Object::operator new(size_t size){
     rcounter* obj = (rcounter*) malloc(size + sizeof(rcounter));
@@ -16,4 +17,17 @@ void Object::operator delete(void* ptr) {
     rcounter* obj = ((rcounter*) ptr - 1);
     pthread_mutex_destroy(&obj->lock);
     free(obj);
+}
+
+unsigned long Object::hash() const {
+    return (unsigned long) this;
+}
+
+bool Object::operator ==(const Object& o) const{
+    return this->hash() == o.hash();
+}
+
+string Object::toString() const {
+    string str = typeid(this).name();
+    return str;
 }
